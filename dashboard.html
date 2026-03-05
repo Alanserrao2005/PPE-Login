@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Secure System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .dashboard-container {
+            max-width: 800px;
+            width: 90%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .welcome-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 50px 40px;
+            margin-top: 100px;
+            animation: cardEntrance 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .welcome-icon {
+            font-size: 64px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .user-id {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <main class="dashboard-container">
+        <div class="welcome-card">
+            <i class="ph-fill ph-check-circle welcome-icon"></i>
+            <h1>Welcome to your Dashboard!</h1>
+            <p style="margin-top: 15px; color: var(--text-muted); font-size: 1.1rem;">
+                You are securely logged in as <br><span class="user-id" id="displayUser">User</span>.
+            </p>
+            <button class="logout-btn" onclick="logout()">
+                <i class="ph ph-sign-out" style="vertical-align: middle; margin-right: 5px;"></i> Log Out
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // Retrieve logged-in user info from sessionStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const userStr = sessionStorage.getItem('loggedInUser');
+            if (!userStr) {
+                // Not authenticated, kick them back to login
+                window.location.href = 'index.html';
+                return;
+            }
+            const user = JSON.parse(userStr);
+            document.getElementById('displayUser').textContent = user.identifier;
+        });
+
+        function logout() {
+            sessionStorage.removeItem('loggedInUser');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+
+</html>
