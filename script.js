@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- API Configuration ---
+    // Change this to your live Render URL when deploying (e.g., 'https://my-secure-login-api.onrender.com/api')
+    const API_BASE_URL = 'http://localhost:5000/api';
+
     // --- Google Auth Initialization ---
     // IMPORTANT: Replace 'YOUR_GOOGLE_CLIENT_ID' with your actual Google OAuth 2.0 Client ID
     const GOOGLE_CLIENT_ID = '895285838361-g5us8j145ves5cmpdlke879nb7oj089f.apps.googleusercontent.com';
@@ -37,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const submitBtn = document.getElementById('submitBtn');
         if (submitBtn) submitBtn.classList.add('loading');
 
-        fetch('http://localhost:5000/api/google-auth', {
+        fetch(`${API_BASE_URL}/google-auth`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token: response.credential, action: 'login' })
@@ -134,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const passwordGroup = passwordInput.parentElement.parentElement;
             let otpErrorText = passwordGroup.querySelector('.api-error');
 
-            fetch('http://localhost:5000/api/login', {
+            fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -253,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             btn.classList.add('loading');
 
-            fetch('http://localhost:5000/api/forgot-password', {
+            fetch(`${API_BASE_URL}/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email })
@@ -328,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             btn.classList.add('loading');
 
-            fetch('http://localhost:5000/api/reset-password', {
+            fetch(`${API_BASE_URL}/reset-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
