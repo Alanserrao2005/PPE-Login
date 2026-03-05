@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- API Configuration ---
     // Change this to your live Render URL when deploying (e.g., 'https://my-secure-login-api.onrender.com/api')
-    const API_BASE_URL = 'http://localhost:5000/api';
+    const API_BASE_URL = 'https://ppe-login.onrender.com/api';
 
     // --- Google Auth Initialization ---
     // IMPORTANT: Replace 'YOUR_GOOGLE_CLIENT_ID' with your actual Google OAuth 2.0 Client ID
