@@ -1,7 +1,6 @@
 import os
 import random
-import smtplib
-from email.message import EmailMessage
+import resend
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -10,6 +9,8 @@ from google.auth.transport import requests as google_requests
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
+
+resend.api_key = os.getenv('RESEND_API_KEY')
 
 app = Flask(__name__)
 # Enable CORS for the local frontend development
@@ -20,29 +21,27 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 otp_store = {}
 
 def send_email(to_email, subject, body):
-    my_email = os.getenv("EMAIL_HOST_USER")
-    my_password = os.getenv("EMAIL_HOST_PASSWORD")
-    port = int(os.getenv("EMAIL_PORT", 465))
-    server = os.getenv("EMAIL_SERVER", "smtp.gmail.com")
-
-    if not my_email or not my_password:
-        print("Warning: Email credentials not configured in .env")
+    if not resend.api_key:
+        print("Warning: RESEND_API_KEY not configured in environment or .env")
         return False
 
     try:
-        msg = EmailMessage()
-        msg.set_content(body)
-        msg['Subject'] = subject
-        msg['From'] = my_email
-        msg['To'] = to_email
+        # Note: Resend requires a verified domain to send FROM in production.
+        # For testing purposes on their free tier, you MUST use their testing 'onboarding@resend.dev' address
+        # AND you can only send emails TO the exact email address you registered your Resend account with.
+        
+        params = {
+            "from": "onboarding@resend.dev",
+            "to": [to_email],
+            "subject": subject,
+            "text": body,
+        }
 
-        # Using SSL
-        with smtplib.SMTP_SSL(server, port, timeout=5) as smtp:
-            smtp.login(my_email, my_password)
-            smtp.send_message(msg)
+        email = resend.Emails.send(params)
+        print(f"Resend dispatch success. ID: {email['id']}")
         return True
     except Exception as e:
-        print(f"Error sending email: {e}")
+        print(f"Error sending email via Resend: {e}")
         return False
 
 @app.route('/api/send-otp', methods=['POST'])
