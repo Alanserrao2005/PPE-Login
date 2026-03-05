@@ -37,7 +37,7 @@ def send_email(to_email, subject, body):
         msg['To'] = to_email
 
         # Using SSL
-        with smtplib.SMTP_SSL(server, port) as smtp:
+        with smtplib.SMTP_SSL(server, port, timeout=5) as smtp:
             smtp.login(my_email, my_password)
             smtp.send_message(msg)
         return True
